@@ -1,0 +1,18 @@
+## Visualizing Covid-19 counts by country (above 500 cases)
+!conda install -c conda-forge folium=0.5.0 --yes
+!conda install -c conda-forge folium --yes
+world_geo='world-countries.json' #Importing world-countries.json file
+
+#Import excel file
+df=pd.read_excel('covid.xlsx')
+
+#Set the threshold for the legend
+threshold_scale=list(np.linspace(df['Cases'].min(),df['Cases'].max(),6,dtype=int))
+threshold_scale[-1]=threshold_scale[-1]+1
+
+#Creating the map with cases
+world_map=folium.Map(location=[0,0],zoom_start=2, tiles='Mapbox Bright')
+world_map.choropleth(geo_data=world_geo, data=df, columns=['Country','Cases'],key_on='feature.properties.name',
+                    fill_color='YlOrRd',fill_opacity=0.7,line_opacity=0.2,legend_name='Covid counts',
+                    threshold_scale=threshold_scale)
+world_map
